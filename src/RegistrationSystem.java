@@ -66,4 +66,13 @@ public class RegistrationSystem {
             System.out.println("Error loading file.");
         }
     }
+    // ค้นหานักเรียนจาก ID
+    public Student findStudentById(String id) {
+        for (Student s : students) {
+            if (s.getStudentId().equals(id)) {
+                return s;
+            }
+        }
+        return null;
+    }
 }

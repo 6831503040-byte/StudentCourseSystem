@@ -1,5 +1,5 @@
 import java.util.*;
-
+import java.io.FileWriter;
 public class Main {
     public static void main(String[] args) {
 
@@ -24,10 +24,12 @@ public class Main {
             System.out.println("1. Add Student & Register Course");
             System.out.println("2. Show Course Status");
             System.out.println("3. Show Summary");
-            System.out.println("4. Exit");
+            System.out.println("4. Search Student");
+            System.out.println("5. Save to File");
+            System.out.println("6. Exit");
             System.out.print("Choose (number only): ");
 
-            int choice = getValidInt(sc); // ✅ กัน input ผิด
+            int choice = getValidInt(sc); // validate numeric input
 
             switch (choice) {
 
@@ -35,14 +37,14 @@ public class Main {
                     System.out.print("Enter name: ");
                     String name = sc.nextLine();
 
-                    // ✅ ตรวจสอบ Student ID
+                    // Validate student ID (must be 10 digits)
                     String id;
                     while (true) {
                         System.out.print("Enter student ID (10 digits only): ");
                         id = sc.nextLine();
 
                         if (id.matches("\\d{10}")) {
-                            break; // ถูกต้อง
+                            break;
                         } else {
                             System.out.println("❌ Invalid ID! Must be exactly 10 digits.");
                         }
@@ -75,6 +77,7 @@ public class Main {
                                 Course c = system.getCourses().get(cIndex);
                                 s.registerCourse(c);
 
+
                                 break;
 
                             } catch (CourseFullException e) {
@@ -90,11 +93,14 @@ public class Main {
                 case 2:
                     // show capacity
                     for (Course c : system.getCourses()) {
-                        System.out.println(
-                                c.getCourseName() + ": " +
-                                        c.getStudentCount() + "/" +
-                                        c.getMaxStudents()
-                        );
+                        System.out.print(c.getCourseName() + " (" +
+                                c.getStudentCount() + "/" + c.getMaxStudents() + ") ");
+
+                        if (c.getStudentCount() >= c.getMaxStudents()) {
+                            System.out.println("[FULL]");
+                        } else {
+                            System.out.println("[Available]");
+                        }
                     }
                     break;
 
@@ -110,8 +116,44 @@ public class Main {
                     break;
 
                 case 4:
-                    System.out.println("=====Bye!=====");
-                    return;
+                    System.out.print("Enter student ID: ");
+                    String searchId = sc.nextLine();
+
+                    Student found = system.findStudentById(searchId);
+
+                    if (found != null) {
+                        System.out.print(found + " -> ");
+                        for (Course c : found.getMyCourses()) {
+                            System.out.print(c.getCourseName() + " ");
+                        }
+                        System.out.println();
+                    } else {
+                        System.out.println("❌ Student not found.");
+                    }
+                    break;
+
+                case 5:
+                    try {
+                        FileWriter fw = new FileWriter("students.txt");
+
+                        for (Student stu : system.getStudents()) {
+                            fw.write(stu + " -> ");
+                            for (Course c : stu.getMyCourses()) {
+                                fw.write(c.getCourseName() + " ");
+                            }
+                            fw.write("\n");
+                        }
+
+                        fw.close();
+                        System.out.println("✅ Saved to file.");
+
+                    } catch (Exception e) {
+                        System.out.println("❌ Error saving file.");
+                    }
+                    break;
+                case 6:
+                   System.out.println("====== Bye! ======");
+                   return;
 
                 default:
                     System.out.println("❌ Invalid menu.");
@@ -119,15 +161,16 @@ public class Main {
         }
     }
 
-    // ✅ Helper method: รับเฉพาะตัวเลข
+    // // Method to ensure numeric input only
     public static int getValidInt(Scanner sc) {
         while (true) {
             try {
-                int value = Integer.parseInt(sc.nextLine());
-                return value;
+                return Integer.parseInt(sc.nextLine()); // แปลงเป็นตัวเลข
             } catch (Exception e) {
-                System.out.print("❌ Please enter numbers only: ");
+                // ถ้า user พิมพ์ตัวอักษร จะเข้า catch
+                System.out.print("❌ Error: Please enter numbers only: ");
             }
         }
     }
+
 }
