@@ -3,4 +3,6 @@
 // making the system more flexible and easier to extend.
 public interface Registrable {
     void registerCourse(Course c) throws CourseFullException;
+    void addCourse(Course c) throws CourseFullException;
 }
+

@@ -51,4 +51,9 @@ public class Student extends Person implements Registrable {
     public void dropCourse(Course c) {
         myCourses.remove(c);
     }
+    @Override
+    public void addCourse(Course c) throws CourseFullException{
+        c.addStudent(this);
+        myCourses.add(c);
+    }
 }

@@ -2,22 +2,14 @@ import java.util.*;
 import java.io.FileWriter;
 public class Main {
     public static void main(String[] args) {
-
+        //todo 1.โหลดไฟล์ student.txt
+        //1.1 name,ID,courses
+        //1.2.โหลด coursesfromfile
+        //2.check ไม่ให้ลงงวิชา้ซำ
         Scanner sc = new Scanner(System.in);
-        RegistrationSystem system = new RegistrationSystem();
-
-        // Fixed courses
-        Course eng = new Course("English", 50);
-        Course thai = new Course("Thai", 50);
-        Course math = new Course("Math", 60);
-        Course sci = new Course("Science", 80);
-        Course com = new Course("Computer", 60);
-
-        system.addCourse(eng);
-        system.addCourse(thai);
-        system.addCourse(math);
-        system.addCourse(sci);
-        system.addCourse(com);
+        RegistrationSystem registrationSystem = new RegistrationSystem();
+        registrationSystem.loadStudentsFromFile();
+        registrationSystem.loadCourseFromFile();
 
         while (true) {
             System.out.println("\n===== MENU =====");
@@ -52,12 +44,15 @@ public class Main {
                     }
 
                     Student s = new Student(name, id);
-                    system.addStudent(s);
+                    Student found = registrationSystem.findStudentById(id);
+                    if (found == null){
+                        registrationSystem.addStudent(s);
+                    }
 
                     System.out.println("Select 1-5 courses:");
 
-                    for (int i = 0; i < system.getCourses().size(); i++) {
-                        System.out.println(i + ": " + system.getCourses().get(i).getCourseName());
+                    for (int i = 0; i < registrationSystem.getCourses().size(); i++) {
+                        System.out.println(i + ": " + registrationSystem.getCourses().get(i).getCourseName());
                     }
 
                     int n;
@@ -75,17 +70,28 @@ public class Main {
                                 System.out.print("Choose course index: ");
                                 int cIndex = getValidInt(sc);
 
-                                Course c = system.getCourses().get(cIndex);
-                                s.registerCourse(c);
-
-
+                                Course c = registrationSystem.getCourses().get(cIndex);
+                                boolean isEnrolled = false ;
+                                if (found != null){
+                                    isEnrolled = registrationSystem.isDuplicateCourse(found,c.getCourseName());
+                                }
+                                System.out.print(isEnrolled);
+                                if (isEnrolled == false){
+                                s.addCourse(c);
                                 break;
+                                }
+
+                                else {
+                                    System.out.print("You have already enrolled in this course.");
+                                }
+
+
 
                             } catch (CourseFullException e) {
                                 System.out.println("❌ " + e.getMessage());
                                 break;
                             } catch (Exception e) {
-                                System.out.println("❌ Invalid input, try again.");
+                                System.out.println("❌ Invalid input, try again." + e.getMessage());
                             }
                         }
                     }
@@ -93,7 +99,7 @@ public class Main {
 
                 case 2:
                     // show capacity
-                    for (Course c : system.getCourses()) {
+                    for (Course c : registrationSystem.getCourses()) {
                         System.out.print(c.getCourseName() + " (" +
                                 c.getStudentCount() + "/" + c.getMaxStudents() + ") ");
 
@@ -107,7 +113,7 @@ public class Main {
 
                 case 3:
                     // summary
-                    for (Student stu : system.getStudents()) {
+                    for (Student stu : registrationSystem.getStudents()) {
                         System.out.print(stu + " -> ");
                         for (Course c : stu.getMyCourses()) {
                             System.out.print(c.getCourseName() + " ");
@@ -119,11 +125,11 @@ public class Main {
                 case 4:
                     System.out.print("Enter student ID: ");
                     String searchId = sc.nextLine();
-                    Student found = system.findStudentById(searchId);
+                    Student studentFound = registrationSystem.findStudentById(searchId);
 
-                    if (found != null) {
-                        System.out.print(found + " -> ");
-                        for (Course c : found.getMyCourses()) {
+                    if (studentFound != null) {
+                        System.out.print(studentFound + " -> ");
+                        for (Course c : studentFound.getMyCourses()) {
                             System.out.print(c.getCourseName() + " ");
                         }
                         System.out.println();
@@ -135,12 +141,20 @@ public class Main {
                 case 5:
                     try {
                         FileWriter fw = new FileWriter("students.txt");
+                        //header ไว้เขียนไฟล์
+                        fw.write("studentId,name,courseNames");
+                        fw.write("\n");
+                        //เขียนข้อมูลลงไป
+                        for (Student stu : registrationSystem.getStudents()) {
+                            fw.write(stu.getStudentId() + "," + stu.getName());
 
-                        for (Student stu : system.getStudents()) {
-                            fw.write(stu + " -> ");
+                            List<String> courseNames = new ArrayList<>();
                             for (Course c : stu.getMyCourses()) {
-                                fw.write(c.getCourseName() + " ");
+                                courseNames.add(c.getCourseName() + ":" + c.getMaxStudents());
+                                System.out.print("course name: "+c.getCourseName() + ":" + c.getMaxStudents());
                             }
+
+                            fw.write("," + String.join("|", courseNames));
                             fw.write("\n");
                         }
 
@@ -155,7 +169,7 @@ public class Main {
                     System.out.print("Enter student ID: ");
                     String dropId = sc.nextLine();
 
-                    Student stu = system.findStudentById(dropId);
+                    Student stu = registrationSystem.findStudentById(dropId);
 
                     if (stu != null) {
                         System.out.println("Your courses:");

@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 // Core system
@@ -54,12 +56,79 @@ public class RegistrationSystem {
             if (!file.exists()) return;
 
             Scanner sc = new Scanner(file);
+            if (sc.hasNextLine()) sc.nextLine(); // skip header
 
             while (sc.hasNextLine()) {
-                String[] data = sc.nextLine().split(",");
-                students.add(new Student(data[0], data[1]));
-            }
+                String line = sc.nextLine().trim();
+                if (line.isEmpty()) continue;
 
+                String[] data = line.split(",", 3); // limit 3 ช่อง
+
+                if (data.length < 3) continue;
+
+                String studentId = data[0];
+                String name = data[1];
+
+                // create student
+                Student student = new Student(name, studentId);
+                //สร้าง key map value
+                Map<String, Course> courseMap = new HashMap<>();
+                // parse courses
+                String[] courseArr = data[2].split("\\|");
+
+                for (String cStr : courseArr) {
+                    String[] parts = cStr.split(":");
+
+                    String cName = parts[0];
+                    int max = Integer.parseInt(parts[1]);
+
+                    //ใช้ shared object
+                    Course c = courseMap.computeIfAbsent(
+                            cName,
+                            k -> new Course(cName, max)
+                    );
+
+                    try {
+                        student.registerCourse(c);
+                    } catch (CourseFullException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
+                students.add(student);
+            }
+            sc.close();
+
+        } catch (Exception e) {
+            System.out.println("Error loading file.");
+        }
+    }
+    //loadcourse
+    public void loadCourseFromFile() {
+        try {
+            File file = new File("course.txt");
+
+            if (!file.exists()) return;
+
+            Scanner sc = new Scanner(file);
+            if (sc.hasNextLine()) sc.nextLine(); // skip header
+
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine().trim();
+                if (line.isEmpty()) continue;
+
+                String[] data = line.split(",", 2); // limit 2 ช่อง
+
+                if (data.length < 2) continue;
+
+                String name = data[0];
+                //convert string to int
+                int max = Integer.parseInt(data[1]);
+
+                // create student
+                Course course = new Course(name,max);
+                courses.add(course);
+            }
             sc.close();
 
         } catch (Exception e) {
@@ -74,5 +143,19 @@ public class RegistrationSystem {
             }
         }
         return null;
+    }
+    public boolean isDuplicateCourse(Student stu, String courseName){
+        boolean isDupplicate = false;
+        for (int i = 0; i < stu.getMyCourses().size(); i++) {
+            String studentCourseName = stu.getMyCourses().get(i).getCourseName();
+            System.out.print(studentCourseName);
+            System.out.print(courseName);
+            if(studentCourseName.equals(courseName)){
+                isDupplicate = true;
+                break;
+            }
+        }
+        System.out.print(isDupplicate);
+        return isDupplicate;
     }
 }

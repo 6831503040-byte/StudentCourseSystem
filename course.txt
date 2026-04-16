@@ -1,0 +1,6 @@
+name,max
+English,50
+Thai,50
+Math,60
+Science,80
+Computer,60
