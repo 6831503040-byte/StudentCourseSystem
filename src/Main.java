@@ -26,7 +26,8 @@ public class Main {
             System.out.println("3. Show Summary");
             System.out.println("4. Search Student");
             System.out.println("5. Save to File");
-            System.out.println("6. Exit");
+            System.out.println("6. Drop Course");
+            System.out.println("7. Exit");
             System.out.print("Choose (number only): ");
 
             int choice = getValidInt(sc); // validate numeric input
@@ -118,7 +119,6 @@ public class Main {
                 case 4:
                     System.out.print("Enter student ID: ");
                     String searchId = sc.nextLine();
-
                     Student found = system.findStudentById(searchId);
 
                     if (found != null) {
@@ -152,6 +152,43 @@ public class Main {
                     }
                     break;
                 case 6:
+                    System.out.print("Enter student ID: ");
+                    String dropId = sc.nextLine();
+
+                    Student stu = system.findStudentById(dropId);
+
+                    if (stu != null) {
+                        System.out.println("Your courses:");
+                        for (int i = 0; i < stu.getMyCourses().size(); i++) {
+                            System.out.println(i + ": " + stu.getMyCourses().get(i).getCourseName());
+                        }
+
+                        int idx;
+
+                        while (true) {
+                            System.out.print("Select index to drop: ");
+
+                            try {
+                                idx = Integer.parseInt(sc.nextLine());
+
+                                if (idx >= 0 && idx < stu.getMyCourses().size()) {
+                                    break;
+                                } else {
+                                    System.out.println("❌ Invalid index! Try again.");
+                                }
+
+                            } catch (Exception e) {
+                                System.out.println("❌ Please enter numbers only!");
+                            }
+                        }
+                        Course c = stu.getMyCourses().get(idx);
+                        stu.dropCourse(c);
+                        System.out.println("✅ Dropped successfully.");
+                    } else {
+                        System.out.println("❌ Student not found.");
+                    }
+                    break;
+                case 7:
                    System.out.println("====== Bye! ======");
                    return;
 
@@ -161,11 +198,11 @@ public class Main {
         }
     }
 
-    // // Method to ensure numeric input only
+    // Method to ensure numeric input only
     public static int getValidInt(Scanner sc) {
         while (true) {
             try {
-                return Integer.parseInt(sc.nextLine()); // แปลงเป็นตัวเลข
+                return Integer.parseInt(sc.nextLine());
             } catch (Exception e) {
                 // ถ้า user พิมพ์ตัวอักษร จะเข้า catch
                 System.out.print("❌ Error: Please enter numbers only: ");
