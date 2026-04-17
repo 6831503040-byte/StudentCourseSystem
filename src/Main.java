@@ -1,11 +1,12 @@
 import java.util.*;
 import java.io.FileWriter;
+
 public class Main {
     public static void main(String[] args) {
-        //todo 1.โหลดไฟล์ student.txt
-        //1.1 name,ID,courses
-        //1.2.โหลด coursesfromfile
-        //2.check ไม่ให้ลงงวิชา้ซำ
+        // todo 1.โหลดไฟล์ student.txt
+        // 1.1 name,ID,courses
+        // 1.2.โหลด coursesfromfile
+        // 2.check ไม่ให้ลงงวิชา้ซำ
         Scanner sc = new Scanner(System.in);
         RegistrationSystem registrationSystem = new RegistrationSystem();
         registrationSystem.loadStudentsFromFile();
@@ -45,11 +46,20 @@ public class Main {
 
                     Student s = new Student(name, id);
                     Student found = registrationSystem.findStudentById(id);
-                    if (found == null){
+                    Student targetStudent;
+                    if (found == null) {
                         registrationSystem.addStudent(s);
+                        targetStudent = s;
+                    } else {
+                        targetStudent = found;
                     }
 
-                    System.out.println("Select 1-5 courses:");
+                    System.out.println("Select 0-4 courses:");
+
+                    if (registrationSystem.getCourses().isEmpty()) {
+                        System.out.println("❌ No courses available. Please add courses to course.txt first.");
+                        break;
+                    }
 
                     for (int i = 0; i < registrationSystem.getCourses().size(); i++) {
                         System.out.println(i + ": " + registrationSystem.getCourses().get(i).getCourseName());
@@ -60,8 +70,10 @@ public class Main {
                         System.out.print("How many courses (1-5): ");
                         n = getValidInt(sc);
 
-                        if (n >= 1 && n <= 5) break;
-                        else System.out.println("❌ Please enter between 1-5.");
+                        if (n >= 1 && n <= 5)
+                            break;
+                        else
+                            System.out.println("❌ Please enter between 1-5.");
                     }
 
                     for (int i = 0; i < n; i++) {
@@ -70,28 +82,27 @@ public class Main {
                                 System.out.print("Choose course index: ");
                                 int cIndex = getValidInt(sc);
 
-                                Course c = registrationSystem.getCourses().get(cIndex);
-                                boolean isEnrolled = false ;
-                                if (found != null){
-                                    isEnrolled = registrationSystem.isDuplicateCourse(found,c.getCourseName());
+                                if (cIndex < 0 || cIndex >= registrationSystem.getCourses().size()) {
+                                    System.out.println("❌ Invalid course index, try again.");
+                                    continue;
                                 }
-                                System.out.print(isEnrolled);
-                                if (isEnrolled == false){
-                                s.addCourse(c);
-                                break;
+
+                                Course c = registrationSystem.getCourses().get(cIndex);
+                                boolean isEnrolled = registrationSystem.isDuplicateCourse(targetStudent, c.getCourseName());
+                                if (!isEnrolled) {
+                                    targetStudent.addCourse(c);
+                                    break;
                                 }
 
                                 else {
                                     System.out.print("You have already enrolled in this course.");
                                 }
 
-
-
                             } catch (CourseFullException e) {
                                 System.out.println("❌ " + e.getMessage());
                                 break;
                             } catch (Exception e) {
-                                System.out.println("❌ Invalid input, try again." + e.getMessage());
+                                System.out.println("❌ Invalid input, try again.");
                             }
                         }
                     }
@@ -141,17 +152,16 @@ public class Main {
                 case 5:
                     try {
                         FileWriter fw = new FileWriter("students.txt");
-                        //header ไว้เขียนไฟล์
+                        // header ไว้เขียนไฟล์
                         fw.write("studentId,name,courseNames");
                         fw.write("\n");
-                        //เขียนข้อมูลลงไป
+                        // เขียนข้อมูลลงไป
                         for (Student stu : registrationSystem.getStudents()) {
                             fw.write(stu.getStudentId() + "," + stu.getName());
 
                             List<String> courseNames = new ArrayList<>();
                             for (Course c : stu.getMyCourses()) {
                                 courseNames.add(c.getCourseName() + ":" + c.getMaxStudents());
-                                System.out.print("course name: "+c.getCourseName() + ":" + c.getMaxStudents());
                             }
 
                             fw.write("," + String.join("|", courseNames));
@@ -203,8 +213,8 @@ public class Main {
                     }
                     break;
                 case 7:
-                   System.out.println("====== Bye! ======");
-                   return;
+                    System.out.println("====== Bye! ======");
+                    return;
 
                 default:
                     System.out.println("❌ Invalid menu.");

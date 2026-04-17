@@ -148,14 +148,11 @@ public class RegistrationSystem {
         boolean isDupplicate = false;
         for (int i = 0; i < stu.getMyCourses().size(); i++) {
             String studentCourseName = stu.getMyCourses().get(i).getCourseName();
-            System.out.print(studentCourseName);
-            System.out.print(courseName);
             if(studentCourseName.equals(courseName)){
                 isDupplicate = true;
                 break;
             }
         }
-        System.out.print(isDupplicate);
         return isDupplicate;
     }
 }

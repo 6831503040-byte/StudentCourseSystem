@@ -1,2 +1,3 @@
 studentId,name,courseNames
-1234567891,nn,Thai:50
+1234567891,nn,Thai:50|Math:60|Science:80
+1111111111,ww,Math:60|Thai:50
