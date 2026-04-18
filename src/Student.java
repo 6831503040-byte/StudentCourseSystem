@@ -20,26 +20,7 @@ public class Student extends Person implements Registrable {
 // Using an interface is a good idea because it defines a contract (behavior) that can be reused.
 // It allows flexibility, so other classes can also implement this behavior in the future.
 // This improves scalability and supports polymorphism.
-    // Prevent duplicate registration (กันลงซ้ำ)
-    /*@Override
-    public void registerCourse(Course c) throws CourseFullException {
 
-        // เช็คว่าลงวิชานี้ไปแล้วหรือยัง
-        if (!myCourses.contains(c)) {
-
-            // เพิ่มนักเรียนเข้า course
-            c.addStudent(this);
-
-            // เพิ่ม course เข้า list
-            myCourses.add(c);
-
-        } else {
-            // ถ้าลงซ้ำ
-            System.out.println("⚠️ Already registered this course.");
-        }
-    }
-
-     */
     public ArrayList<Course> getMyCourses() {
         return myCourses;
     }
@@ -53,6 +34,7 @@ public class Student extends Person implements Registrable {
         myCourses.remove(c);
         c.removeStudent(this);
     }
+    // Prevent duplicate registration (กันลงซ้ำ)
     @Override
     public void addCourse(Course c) throws CourseFullException{
         c.addStudent(this);
