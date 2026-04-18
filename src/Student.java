@@ -21,7 +21,7 @@ public class Student extends Person implements Registrable {
 // It allows flexibility, so other classes can also implement this behavior in the future.
 // This improves scalability and supports polymorphism.
     // Prevent duplicate registration (กันลงซ้ำ)
-    @Override
+    /*@Override
     public void registerCourse(Course c) throws CourseFullException {
 
         // เช็คว่าลงวิชานี้ไปแล้วหรือยัง
@@ -38,6 +38,8 @@ public class Student extends Person implements Registrable {
             System.out.println("⚠️ Already registered this course.");
         }
     }
+
+     */
     public ArrayList<Course> getMyCourses() {
         return myCourses;
     }

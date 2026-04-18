@@ -2,7 +2,7 @@
 // This is useful because it separates "what to do" from "how to do it"
 // making the system more flexible and easier to extend.
 public interface Registrable {
-    void registerCourse(Course c) throws CourseFullException;
+    //void registerCourse(Course c) throws CourseFullException;
     void addCourse(Course c) throws CourseFullException;
 }
 

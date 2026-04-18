@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 // Core system
@@ -86,28 +84,12 @@ public class RegistrationSystem {
 
                 // create student
                 Student student = new Student(name, studentId);
-                //สร้าง key map value
-                //Map<String, Course> courseMap = new HashMap<>();
+
                 // parse courses
                 String[] courseArr = data[2].split("\\|");
 
                 for (String cStr : courseArr) {
-                    //String[] parts = cStr.split(":");
 
-                    //String cName = parts[0];
-                    //int max = Integer.parseInt(parts[1]);
-
-                    //ใช้ shared object
-                    //Course c = courseMap.computeIfAbsent(
-                            //cName,
-                            //k -> new Course(cName, max)
-                    //);
-
-                    //try {
-                        //student.registerCourse(c);
-                    //} catch (CourseFullException e) {
-                       // System.out.println(e.getMessage());
-                   // }
                     String cName = cStr.trim();
 
                     // หา course จาก list หลัก
@@ -122,7 +104,7 @@ public class RegistrationSystem {
                     // ถ้าเจอ → register
                     if (c != null) {
                         try {
-                            student.registerCourse(c);
+                            student.addCourse(c);
                         } catch (CourseFullException e) {
                             System.out.println(e.getMessage());
                         }

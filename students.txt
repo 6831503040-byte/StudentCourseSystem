@@ -1,2 +1,3 @@
 studentId,name,courseNames
-1111111111,ww,Thai|Science|English
+1111111111,ww,Thai|Science|English|Math|Computer
+3333333333,ee,Thai

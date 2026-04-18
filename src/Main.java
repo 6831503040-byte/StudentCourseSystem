@@ -26,8 +26,18 @@ public class Main {
             switch (choice) {
 
                 case 1:
-                    System.out.print("Enter name: ");
-                    String name = sc.nextLine();
+                    //Validate Student name (must be string)
+                    String name;
+                    while (true){
+                        System.out.print("Enter name: ");
+                        name = sc.nextLine();
+
+                        if(!name.matches(".*\\d.*")) {
+                            break;
+                        } else{
+                            System.out.println("❌ Error: Name must not contain numbers!");
+                        }
+                    }
 
                     // Validate student ID (must be 10 digits)
                     String id;
