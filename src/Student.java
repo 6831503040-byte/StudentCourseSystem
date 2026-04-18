@@ -29,11 +29,13 @@ public class Student extends Person implements Registrable {
     public String toString() {
         return name + " (" + studentId + ")";
     }
+
     // Drop course (ลบวิชา)
     public void dropCourse(Course c) {
         myCourses.remove(c);
         c.removeStudent(this);
     }
+
     // Prevent duplicate registration (กันลงซ้ำ)
     @Override
     public void addCourse(Course c) throws CourseFullException{

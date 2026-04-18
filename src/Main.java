@@ -5,7 +5,9 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
+
         RegistrationSystem registrationSystem = new RegistrationSystem();
+
         registrationSystem.loadCourseFromFile(); //โหลดcourse
         registrationSystem.loadStudentsFromFile();//โหลดstudent
 
@@ -242,5 +244,4 @@ public class Main {
             }
         }
     }
-
 }

@@ -29,7 +29,7 @@ public class RegistrationSystem {
         return courses;
     }
 
-    // File Write
+    // File Write (Save File)
     public void saveStudentsToFile() {
         try {
             FileWriter writer = new FileWriter("students.txt");
@@ -66,18 +66,21 @@ public class RegistrationSystem {
         try {
             File file = new File("students.txt");
 
-            if (!file.exists()) return;
+            if (!file.exists())
+                return;
 
             Scanner sc = new Scanner(file);
             if (sc.hasNextLine()) sc.nextLine(); // skip header
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine().trim();
-                if (line.isEmpty()) continue;
-
+                if (line.isEmpty())
+                    continue;
+                //แยกข้อมูล
                 String[] data = line.split(",", 3); // limit 3 ช่อง
 
-                if (data.length < 3) continue;
+                if (data.length < 3)
+                    continue;
 
                 String studentId = data[0];
                 String name = data[1];
@@ -85,12 +88,12 @@ public class RegistrationSystem {
                 // create student
                 Student student = new Student(name, studentId);
 
-                // parse courses
+                // แยกข้อมูล
                 String[] courseArr = data[2].split("\\|");
 
-                for (String cStr : courseArr) {
+                for (String cStr : courseArr) { // cStr คือ String ที่มาจากไฟล์
 
-                    String cName = cStr.trim();
+                    String cName = cStr.trim();// .trim ใช้ลบช่องว่างหน้าหลัง
 
                     // หา course จาก list หลัก
                     Course c = null;
@@ -101,7 +104,7 @@ public class RegistrationSystem {
                         }
                     }
 
-                    // ถ้าเจอ → register
+                    // ถ้าเจอ ให้ register
                     if (c != null) {
                         try {
                             student.addCourse(c);
@@ -124,18 +127,21 @@ public class RegistrationSystem {
         try {
             File file = new File("course.txt");
 
-            if (!file.exists()) return;
+            if (!file.exists())
+                return;
 
             Scanner sc = new Scanner(file);
             if (sc.hasNextLine()) sc.nextLine(); // skip header
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine().trim();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty())
+                    continue;
 
                 String[] data = line.split(",", 2); // limit 2 ช่อง
 
-                if (data.length < 2) continue;
+                if (data.length < 2)
+                    continue;
 
                 String name = data[0];
                 //convert string to int
@@ -160,6 +166,7 @@ public class RegistrationSystem {
         }
         return null;
     }
+    //หาวิชาที่ซ้ำ
     public boolean isDuplicateCourse(Student stu, String courseName){
         boolean isDupplicate = false;
         for (int i = 0; i < stu.getMyCourses().size(); i++) {
