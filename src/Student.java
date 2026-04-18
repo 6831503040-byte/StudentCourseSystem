@@ -38,8 +38,9 @@ public class Student extends Person implements Registrable {
 
     // Prevent duplicate registration (กันลงซ้ำ)
     @Override
-    public void addCourse(Course c) throws CourseFullException{
+    public void addCourse(Course c) throws CourseFullException {
         c.addStudent(this);
         myCourses.add(c);
+
     }
 }

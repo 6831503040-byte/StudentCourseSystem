@@ -63,6 +63,11 @@ public class Main {
                     } else {
                         targetStudent = found;
                     }
+                    // check if student already has 5 courses
+                    if (targetStudent.getMyCourses().size() >= 5) {
+                        System.out.println("❌ You have already registered maximum courses!");
+                        break;
+                    }
 
                     System.out.println("Select 1-5 courses:");
 
@@ -96,6 +101,7 @@ public class Main {
                                     System.out.println("❌ Invalid course index, try again.");
                                     continue;
                                 }
+
 
                                 Course c = registrationSystem.getCourses().get(cIndex);
                                 boolean isEnrolled = registrationSystem.isDuplicateCourse(targetStudent, c.getCourseName());
@@ -172,7 +178,6 @@ public class Main {
                             List<String> courseNames = new ArrayList<>();
                             for (Course c : stu.getMyCourses()) {
                                 courseNames.add(c.getCourseName());
-                                System.out.print("course name: " + c.getCourseName());
                             }
 
                             fw.write("," + String.join("|", courseNames));

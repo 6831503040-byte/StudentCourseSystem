@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 // Core system
@@ -74,7 +76,7 @@ public class RegistrationSystem {
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine().trim();
-                if (line.isEmpty())
+                if (line.isEmpty()) //ข้ามบรรทัดว่าง
                     continue;
                 //แยกข้อมูล
                 String[] data = line.split(",", 3); // limit 3 ช่อง
@@ -90,16 +92,34 @@ public class RegistrationSystem {
 
                 // แยกข้อมูล
                 String[] courseArr = data[2].split("\\|");
+                Map<String, Course> courseMap = new HashMap<>();
 
+                for (Course c : courses) {
+                    courseMap.put(c.getCourseName(), c);
+                }
+                for (String cStr : courseArr) {
+                    String cName = cStr.trim();
+
+                    Course c = courseMap.get(cName);
+
+                    if (c != null) {
+                        try {
+                            student.addCourse(c);
+                        } catch (CourseFullException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+                /*
                 for (String cStr : courseArr) { // cStr คือ String ที่มาจากไฟล์
 
                     String cName = cStr.trim();// .trim ใช้ลบช่องว่างหน้าหลัง
 
                     // หา course จาก list หลัก
                     Course c = null;
-                    for (Course existing : courses) {
-                        if (existing.getCourseName().equals(cName)) {
-                            c = existing;
+                    for (Course course : courses) {
+                        if (course.getCourseName().equals(cName)) {
+                            c = course;
                             break;
                         }
                     }
@@ -114,14 +134,17 @@ public class RegistrationSystem {
                     }
                 }
 
+                 */
+
                 students.add(student);
             }
             sc.close();
 
-        } catch (Exception e) {
+            } catch (Exception e) {
             System.out.println("Error loading file.");
         }
     }
+
     //loadcourse
     public void loadCourseFromFile() {
         try {
@@ -178,5 +201,6 @@ public class RegistrationSystem {
         }
         return isDupplicate;
     }
+
 
 }
