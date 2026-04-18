@@ -37,7 +37,22 @@ public class RegistrationSystem {
             FileWriter writer = new FileWriter("students.txt");
 
             for (Student s : students) {
-                writer.write(s.getName() + "," + s.getStudentId() + "\n");
+
+                // เขียน id และ name
+                writer.write(s.getStudentId() + "," + s.getName() + ",");
+
+                // เขียน course
+                ArrayList<Course> courses = s.getMyCourses();
+
+                for (int i = 0; i < courses.size(); i++) {
+                    writer.write(courses.get(i).getCourseName());
+
+                    if (i < courses.size() - 1) {
+                        writer.write("|"); // คั่น |
+                    }
+                }
+
+                writer.write("\n");
             }
 
             writer.close();
@@ -72,26 +87,45 @@ public class RegistrationSystem {
                 // create student
                 Student student = new Student(name, studentId);
                 //สร้าง key map value
-                Map<String, Course> courseMap = new HashMap<>();
+                //Map<String, Course> courseMap = new HashMap<>();
                 // parse courses
                 String[] courseArr = data[2].split("\\|");
 
                 for (String cStr : courseArr) {
-                    String[] parts = cStr.split(":");
+                    //String[] parts = cStr.split(":");
 
-                    String cName = parts[0];
-                    int max = Integer.parseInt(parts[1]);
+                    //String cName = parts[0];
+                    //int max = Integer.parseInt(parts[1]);
 
                     //ใช้ shared object
-                    Course c = courseMap.computeIfAbsent(
-                            cName,
-                            k -> new Course(cName, max)
-                    );
+                    //Course c = courseMap.computeIfAbsent(
+                            //cName,
+                            //k -> new Course(cName, max)
+                    //);
 
-                    try {
-                        student.registerCourse(c);
-                    } catch (CourseFullException e) {
-                        System.out.println(e.getMessage());
+                    //try {
+                        //student.registerCourse(c);
+                    //} catch (CourseFullException e) {
+                       // System.out.println(e.getMessage());
+                   // }
+                    String cName = cStr.trim();
+
+                    // หา course จาก list หลัก
+                    Course c = null;
+                    for (Course existing : courses) {
+                        if (existing.getCourseName().equals(cName)) {
+                            c = existing;
+                            break;
+                        }
+                    }
+
+                    // ถ้าเจอ → register
+                    if (c != null) {
+                        try {
+                            student.registerCourse(c);
+                        } catch (CourseFullException e) {
+                            System.out.println(e.getMessage());
+                        }
                     }
                 }
 
@@ -155,4 +189,5 @@ public class RegistrationSystem {
         }
         return isDupplicate;
     }
+
 }

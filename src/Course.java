@@ -20,6 +20,9 @@ public class Course {
             students.add(s);
         }
     }
+    public void removeStudent(Student s) {
+        students.remove(s);
+    }
 
     public String getCourseName() {
         return courseName;

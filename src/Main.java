@@ -3,14 +3,12 @@ import java.io.FileWriter;
 
 public class Main {
     public static void main(String[] args) {
-        // todo 1.โหลดไฟล์ student.txt
-        // 1.1 name,ID,courses
-        // 1.2.โหลด coursesfromfile
-        // 2.check ไม่ให้ลงงวิชา้ซำ
+
         Scanner sc = new Scanner(System.in);
         RegistrationSystem registrationSystem = new RegistrationSystem();
-        registrationSystem.loadStudentsFromFile();
-        registrationSystem.loadCourseFromFile();
+        registrationSystem.loadCourseFromFile(); //โหลดcourse
+        registrationSystem.loadStudentsFromFile();//โหลดstudent
+
 
         while (true) {
             System.out.println("\n===== MENU =====");
@@ -54,7 +52,7 @@ public class Main {
                         targetStudent = found;
                     }
 
-                    System.out.println("Select 0-4 courses:");
+                    System.out.println("Select 1-5 courses:");
 
                     if (registrationSystem.getCourses().isEmpty()) {
                         System.out.println("❌ No courses available. Please add courses to course.txt first.");
@@ -95,14 +93,14 @@ public class Main {
                                 }
 
                                 else {
-                                    System.out.print("You have already enrolled in this course.");
+                                    System.out.print("You have already enrolled in this course.\n");
                                 }
 
                             } catch (CourseFullException e) {
                                 System.out.println("❌ " + e.getMessage());
                                 break;
                             } catch (Exception e) {
-                                System.out.println("❌ Invalid input, try again.");
+                                System.out.println("❌ Invalid input, try again." + e.getMessage());
                             }
                         }
                     }
@@ -161,7 +159,8 @@ public class Main {
 
                             List<String> courseNames = new ArrayList<>();
                             for (Course c : stu.getMyCourses()) {
-                                courseNames.add(c.getCourseName() + ":" + c.getMaxStudents());
+                                courseNames.add(c.getCourseName());
+                                System.out.print("course name: " + c.getCourseName());
                             }
 
                             fw.write("," + String.join("|", courseNames));
@@ -169,7 +168,7 @@ public class Main {
                         }
 
                         fw.close();
-                        System.out.println("✅ Saved to file.");
+                        System.out.println("\n✅ Saved to file.");
 
                     } catch (Exception e) {
                         System.out.println("❌ Error saving file.");

@@ -38,7 +38,6 @@ public class Student extends Person implements Registrable {
             System.out.println("⚠️ Already registered this course.");
         }
     }
-
     public ArrayList<Course> getMyCourses() {
         return myCourses;
     }
@@ -50,6 +49,7 @@ public class Student extends Person implements Registrable {
     // Drop course (ลบวิชา)
     public void dropCourse(Course c) {
         myCourses.remove(c);
+        c.removeStudent(this);
     }
     @Override
     public void addCourse(Course c) throws CourseFullException{

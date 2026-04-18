@@ -1,5 +1,5 @@
 name,max
-English,50
+English,1
 Thai,50
 Math,60
 Science,80
