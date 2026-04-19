@@ -55,7 +55,7 @@ public class Main {
                     }
 
                     Student s = new Student(name, id);
-                    Student found = registrationSystem.findStudentById(id);
+                    Student found = registrationSystem.findStudentById(id); //check student ว่ามีในระบบไหม
                     Student targetStudent;
                     if (found == null) {
                         registrationSystem.addStudent(s);
@@ -66,7 +66,7 @@ public class Main {
                     // check if student already has 5 courses
                     if (targetStudent.getMyCourses().size() >= 5) {
                         System.out.println("❌ You have already registered maximum courses!");
-                        break;
+                        continue;
                     }
 
                     System.out.println("Select 1-5 courses:");

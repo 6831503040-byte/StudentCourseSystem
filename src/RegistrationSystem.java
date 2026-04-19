@@ -19,10 +19,6 @@ public class RegistrationSystem {
         students.add(s);
     }
 
-    public void addCourse(Course c) {
-        courses.add(c);
-    }
-
     public ArrayList<Student> getStudents() {
         return students;
     }
